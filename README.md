@@ -1,3 +1,6 @@
+LINK REPO: 
+https://github.com/FMarvin/restaurant-pos-system
+
 # Documentación del Proyecto: Sistema de Restaurante
 
 ## 1. Elección de Stack
@@ -30,13 +33,13 @@
 Para este desarrollo se aplicaron técnicas avanzadas de ingeniería de prompts con IA, estructurando las instrucciones bajo los siguientes conceptos:
 
 * **Role Prompting & Architectural Constraints**
-  * *Prompt:* "Actúa como un Arquitecto de Software Senior especializado en FastAPI. Diseña una capa de servicios y repositorios desacoplada (Patrón N-Tier) para un sistema de restaurante, asegurando que las consultas SQL residan estrictamente en la capa de persistencia y la lógica de negocio en los servicios, aplicando inversión de dependencias mediante `Depends`."[cite: 2]
+  * *Prompt:* "Actúa como un Arquitecto de Software Senior especializado en FastAPI. Diseña una capa de servicios y repositorios desacoplada (Patrón N-Tier) para un sistema de restaurante, asegurando que las consultas SQL residan estrictamente en la capa de persistencia y la lógica de negocio en los servicios, aplicando inversión de dependencias mediante 
 
 * **Behavioral & Real-Time Workflow Prompting**
-  * *Prompt:* "Implementa un administrador de conexiones WebSocket asíncrono para FastAPI que actúe como un bus de eventos bidireccional. Cuando el mesero registre una orden, debe transmitirse instantáneamente a la pantalla de cocina (KDS); y cuando la cocina marque el estado a 'LISTO', debe emitir una alerta en tiempo real al panel del mesero sin recargar la página."[cite: 2]
+  * *Prompt:* "Implementa un administrador de conexiones WebSocket asíncrono para FastAPI que actúe como un bus de eventos bidireccional. Cuando el mesero registre una orden, debe transmitirse instantáneamente a la pantalla de cocina (KDS); y cuando la cocina marque el estado a 'LISTO', debe emitir una alerta en tiempo real al panel del mesero sin recargar la página.
 
 * **Output Schema Enforcement**
-  * *Prompt:* "Escribe las consultas DDL en SQL para PostgreSQL que modelen un sistema transaccional (TPS) de restaurante. Incluye llaves foráneas estrictas, restricciones en cascada para los platillos de una comanda, estados enumerados para mesas y pedidos, y un conjunto de datos iniciales (seed) de 6 mesas y 6 platillos."[cite: 2, 3]
-
+  * *Prompt:* "Escribe las consultas DDL en SQL para PostgreSQL que modelen un sistema transaccional (TPS) de restaurante. Incluye llaves foráneas estrictas, restricciones en cascada para los platillos de una comanda, estados enumerados para mesas y pedidos, y un conjunto de datos iniciales (seed) de 6 mesas y 6 platillos."
 * **Contextual UI/UX Scaffolding**
-  * *Prompt:* "Diseña las interfaces frontend en un archivo HTML único por vista utilizando Tailwind CSS mediante CDN. La vista del mesero debe integrar un mapa de salón interactivo con colores dinámicos (verde para libre, rojo para ocupado), un formulario de comanda con notas libres para alergias y un panel de caja para liberación de mesas."[cite: 2]
+  * *Prompt:* "Diseña las interfaces frontend en un archivo HTML único por vista utilizando Tailwind CSS mediante CDN. La vista del mesero debe integrar un mapa de salón interactivo con colores dinámicos (verde para libre, rojo para ocupado), un formulario de comanda con notas libres para alergias y un panel de caja para liberación de mesas."
+
