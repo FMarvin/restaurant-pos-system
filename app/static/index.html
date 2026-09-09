@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Sistema de Restaurante - Selector</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 flex items-center justify-center min-h-screen p-4 font-sans">
+  <div class="bg-white p-8 rounded-3xl shadow-xl max-w-md w-full text-center border border-slate-200">
+    <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl font-bold">🍽️</div>
+    <h1 class="text-2xl font-black text-slate-800 tracking-tight">Sistema de Restaurante</h1>
+    <p class="text-slate-500 text-sm mt-1 mb-8">Selecciona la terminal operativa:</p>
+    <div class="space-y-4">
+      <a href="/waiter.html" class="flex items-center justify-between p-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-bold shadow-lg transition-all">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">📱</span>
+          <div class="text-left">
+            <div class="leading-tight">Terminal Mesero</div>
+            <div class="text-xs text-blue-200 font-normal">Mesas, comandas y caja</div>
+          </div>
+        </div>
+      </a>
+      <a href="/kitchen.html" class="flex items-center justify-between p-4 bg-slate-800 hover:bg-slate-900 text-white rounded-2xl font-bold shadow-lg transition-all">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">🍳</span>
+          <div class="text-left">
+            <div class="leading-tight">Pantalla Cocina</div>
+            <div class="text-xs text-slate-400 font-normal">Despacho en tiempo real</div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</body>
+</html>

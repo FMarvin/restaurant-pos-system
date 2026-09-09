@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Pantalla de Cocina</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 min-h-screen p-6 text-white font-sans">
+  <h1 class="text-3xl font-black text-amber-400 mb-6">🍳 Pantalla de Cocina (KDS)</h1>
+  <div id="ordersContainer" class="grid grid-cols-3 gap-6"></div>
+  <script>
+    const ws = new WebSocket(`ws://${location.host}/ws`);
+    ws.onmessage = (e) => {
+      const data = JSON.parse(e.data);
+      if(data.event === "NEW_ORDER") renderOrderCard(data.order);
+    };
+    async function loadPendingOrders() {
+      const res = await fetch('/api/orders/kitchen');
+      const orders = await res.json();
+      orders.forEach(renderOrderCard);
+    }
+    function renderOrderCard(o) {
+      if(document.getElementById(`order-${o.id}`)) return;
+      const d = document.createElement('div');
+      d.id = `order-${o.id}`;
+      d.className = "bg-slate-800 p-5 rounded-2xl";
+      d.innerHTML = `
+        <h2 class="text-2xl text-amber-400 font-bold mb-2">Mesa ${o.table_number}</h2>
+        ${o.special_instructions ? `<p class="text-rose-400 mb-2">⚠️ ${o.special_instructions}</p>`:''}
+        <ul>${o.items.map(i => `<li>${i.dish} x${i.quantity}</li>`).join('')}</ul>
+        <button onclick="markAsReady(${o.id})" class="mt-4 bg-emerald-600 px-4 py-2 rounded">Marcar Listo</button>
+      `;
+      document.getElementById("ordersContainer").prepend(d);
+    }
+    async function markAsReady(id) {
+      await fetch(`/api/orders/${id}/ready`, { method: 'PATCH' });
+      document.getElementById(`order-${id}`).remove();
+    }
+    loadPendingOrders();
+  </script>
+</body>
+</html>

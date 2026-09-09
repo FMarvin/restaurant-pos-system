@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel de Mesero</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 min-h-screen p-4 md:p-6 font-sans">
+  <div class="max-w-7xl mx-auto space-y-6">
+    <header class="flex justify-between bg-white p-5 rounded-2xl shadow-sm">
+      <div>
+        <h1 class="text-2xl font-black text-slate-800">Panel del Mesero</h1>
+      </div>
+      <div id="readyBanner" class="hidden bg-emerald-600 text-white px-5 py-3 rounded-xl shadow-lg font-bold">¡Pedido listo!</div>
+    </header>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="lg:col-span-2 space-y-6">
+        <div class="bg-white p-5 rounded-2xl shadow-sm">
+          <h2 class="font-bold text-slate-800 mb-4">📍 Mapeo de Salón</h2>
+          <div id="tablesGrid" class="grid grid-cols-3 gap-3"></div>
+        </div>
+        <div class="bg-white p-5 rounded-2xl shadow-sm">
+          <h2 class="font-bold text-slate-800 mb-4">📝 Registro de Pedido</h2>
+          <input type="number" id="orderTable" readonly placeholder="Mesa" class="mb-2 p-2 border rounded w-full">
+          <input type="text" id="orderNotes" placeholder="Instrucciones Especiales" class="mb-4 p-2 border rounded w-full">
+          <div id="dishesList" class="grid grid-cols-2 gap-3 mb-4"></div>
+          <button onclick="submitOrder()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl">Enviar a Cocina</button>
+        </div>
+      </div>
+      <div class="space-y-6">
+        <div class="bg-white p-5 rounded-2xl shadow-sm">
+          <h2 class="font-bold text-slate-800 mb-3">🛎️ Notificaciones</h2>
+          <div id="notificationsBox"></div>
+        </div>
+        <div class="bg-white p-5 rounded-2xl shadow-sm">
+          <h2 class="font-bold text-slate-800 mb-3">💳 Cobros</h2>
+          <input type="number" id="payTableNumber" placeholder="No. de Mesa" class="w-full p-2 border rounded mb-3">
+          <button onclick="processPayment()" class="w-full bg-emerald-600 text-white font-bold py-3 rounded-xl">Cobrar y Liberar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const ws = new WebSocket(`ws://${location.host}/ws`);
+    ws.onmessage = (e) => {
+      const data = JSON.parse(e.data);
+      if(data.event === "ORDER_READY") alert(`¡Pedido de mesa ${data.table_number} LISTO!`);
+      loadTables();
+    };
+    async function loadTables() {
+      const res = await fetch('/api/tables');
+      const tables = await res.json();
+      document.getElementById("tablesGrid").innerHTML = tables.map(t => `
+        <div onclick="document.getElementById('orderTable').value=${t.number};document.getElementById('payTableNumber').value=${t.number};" class="cursor-pointer p-4 border rounded text-center ${t.status==='FREE'?'bg-emerald-50':'bg-rose-50'}">
+          Mesa ${t.number}
+        </div>
+      `).join('');
+    }
+    async function loadDishes() {
+      const res = await fetch('/api/dishes');
+      const dishes = await res.json();
+      document.getElementById("dishesList").innerHTML = dishes.map(d => `
+        <div class="border p-2 rounded flex justify-between">
+          <span>${d.name}</span>
+          <input type="number" min="0" value="0" data-id="${d.id}" class="dish-qty w-12 border">
+        </div>
+      `).join('');
+    }
+    async function submitOrder() {
+      const items = Array.from(document.querySelectorAll(".dish-qty")).map(i => ({dish_id: i.dataset.id, quantity: i.value})).filter(i => i.quantity > 0);
+      await fetch('/api/orders', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({
+        table_number: document.getElementById("orderTable").value, special_instructions: document.getElementById("orderNotes").value, items
+      })});
+      alert('Enviado!');
+    }
+    async function processPayment() {
+      const tbl = document.getElementById("payTableNumber").value;
+      await fetch(`/api/tables/${tbl}/pay`, { method: 'POST' });
+      alert('Cobrado'); loadTables();
+    }
+    loadTables(); loadDishes();
+  </script>
+</body>
+</html>
